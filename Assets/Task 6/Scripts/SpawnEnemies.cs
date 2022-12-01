@@ -4,27 +4,23 @@ using UnityEngine;
 
 public class SpawnEnemies : MonoBehaviour
 {
-    [SerializeField] private float _timeSpawn;
-    [SerializeField] private GameObject _enemy;
-    [SerializeField] private List<GameObject> _spawnPoints;
+    [SerializeField] private float _delay;
+    [SerializeField] private Enemy _enemy;
+    [SerializeField] private List<Transform> _spawnPoints;
 
     private void Start()
     {
         StartCoroutine(SpawnObject());
     }
 
-    private void LoopCoroutine()
-    {
-        StartCoroutine(SpawnObject());
-    }
-
     private IEnumerator SpawnObject()
     {
-        yield return new WaitForSeconds(_timeSpawn);
+        while (true)
+        {
+            int randomPoint = Random.Range(0, _spawnPoints.Count);
+            Instantiate(_enemy, _spawnPoints[randomPoint].transform.position, Quaternion.identity);
 
-        int randomPoint = Random.Range(0, _spawnPoints.Count);
-        Instantiate(_enemy, _spawnPoints[randomPoint].transform.position, Quaternion.identity);
-
-        LoopCoroutine();
+            yield return new WaitForSeconds(_delay);
+        }        
     }
 }
